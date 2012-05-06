@@ -30,6 +30,9 @@ end until nc.to_i.zero?
 
 pending = followed_by_array - follows_array
 pending.each do |id|
-  client.follow_user(id) unless followed_by_hash[id].profile_picture == ANONYMOUS_PICTURE
-  #p followed_by_hash[id].username
+  next if followed_by_hash[id].profile_picture == ANONYMOUS_PICTURE
+  user = client.user(id)
+  next if user.counts.followed_by > 1000
+  client.follow_user(id)
+  p followed_by_hash[id].username
 end
